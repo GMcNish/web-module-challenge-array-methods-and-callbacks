@@ -17,6 +17,18 @@ Practice accessing data by console.log-ing the following pieces of data note.
 
 //(e) Winner of 2014 world cup final */
 
+const twentyFourteen = fifaData.filter((year) => year.Year === 2014 && year.Stage === 'Final')
+// console.log(twentyFourteen)
+console.log(twentyFourteen[0]['Home Team Name'])
+console.log(twentyFourteen[0]['Away Team Name'])
+console.log(twentyFourteen[0]['Home Team Goals'])
+console.log(twentyFourteen[0]['Away Team Goals'])
+console.log(twentyFourteen[0]['Win conditions'])
+
+// const twentyFourteen = fifaData.filter((year) => {
+//     return year.Year === 2014 && year.Stage === 'Final'
+// })
+
 
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 2: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 
 Use getFinals to do the following:
@@ -26,11 +38,11 @@ Use getFinals to do the following:
 💡 HINT - you should be looking at the stage key inside of the objects
 */
 
-function getFinals(/* code here */) {
-    /* code here */
+function getFinals(array) {
+    return array.filter((final) => final.Stage === 'Final')
  }
 
-
+console.log(getFinals(fifaData))
 
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 3: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
 Use the higher-order function called getYears to do the following: 
@@ -38,10 +50,12 @@ Use the higher-order function called getYears to do the following:
 2. Receive a callback function as the second parameter that will take getFinals from task 2 as an argument
 3. Return an array called years containing all of the years in the getFinals data set*/
 
-function getYears(/* code here */) {
-    /* code here */
+function getYears(array, cb) {
+    let years = []
+    years = cb(array).map((years) => years.Year)
+    return years
 }
-
+console.log(getYears(fifaData, getFinals))
 
 
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 4: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
@@ -52,11 +66,20 @@ Use the higher-order function getWinners to do the following:
 💡 HINT: Don't worry about ties for now (Please see the README file for info on ties for a stretch goal.)
 4. Returns the names of all winning countries in an array called `winners` */ 
 
-function getWinners(/* code here */) {
-    /* code here */
+function getWinners(array, cb) {
+    let winners = []
+    let arr = cb(array);
+    for(let i = 0; i < arr.length; i++){
+        if (arr[i]['Home Team Goals'] > arr[i]['Away Team Goals']){
+            winners.push(arr[i]['Home Team Name'])
+        } else if (arr[i]['Away Team Goals'] > arr[i]['Home Team Goals']){
+            winners.push(arr[i]['Away Team Name']) 
+        }
+    }
+    return winners;
 }
 
-
+console.log(getWinners(fifaData, getFinals))
 
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 5: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 
 Use the higher-order function getWinnersByYear to do the following:
@@ -69,12 +92,17 @@ Use the higher-order function getWinnersByYear to do the following:
 💡 HINT: the strings returned need to exactly match the string in step 4.
  */
 
-function getWinnersByYear(/* code here */) {
-    /* code here */
+function getWinnersByYear(array, cb1, cb2, cb3) {
+    let stringArray = [];
+    let yearGet = cb2(array, cb1);
+    let winGet = cb3(array, cb1);
+    for (let i = 0; i < yearGet.length; i++){
+        stringArray.push(`In ${yearGet[i]}, ${winGet[i]} won the world cup!`)
+    }
+    return stringArray;
 }
 
-
-
+console.log(getWinnersByYear(fifaData, getFinals, getYears, getWinners))
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 6: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
 Use the higher order function `getAverageGoals` to do the following: 
  1. Receive a callback function as a parameter that will take `getFinals` (from task 2) as an argument; ensure you pass in `fifaData` as its argument
@@ -89,12 +117,20 @@ Use the higher order function `getAverageGoals` to do the following:
  
 */
 
-function getAverageGoals(/* code here */) {
-    /* code here */
- }
+function getAverageGoals(cb) {
+    let goalAv = 0
+    let arr = cb(fifaData)
+    let homeGoals = arr.reduce((acc, arr) => {
+        return acc += arr['Home Team Goals'];
+      }, 0);
+    let awayGoals = arr.reduce((acc, arr) => {
+        return acc += arr['Away Team Goals'];
+      }, 0);
+    goalAv = ((homeGoals+awayGoals)/arr.length)
+    return goalAv.toFixed(2)
+}
 
-
-
+console.log(getAverageGoals(getFinals))
 
 /// 🥅 STRETCH 🥅 ///
 
