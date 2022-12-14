@@ -17,7 +17,7 @@ Practice accessing data by console.log-ing the following pieces of data note.
 
 //(e) Winner of 2014 world cup final */
 
-const twentyFourteen = fifaData.filter((year) => year.Year === 2014 && year.Stage === 'Final')
+const twentyFourteen = fifaData.filter((item) => item.Year === 2014 && item.Stage === 'Final')
 // console.log(twentyFourteen)
 console.log(twentyFourteen[0]['Home Team Name'])
 console.log(twentyFourteen[0]['Away Team Name'])
@@ -51,11 +51,15 @@ Use the higher-order function called getYears to do the following:
 3. Return an array called years containing all of the years in the getFinals data set*/
 
 function getYears(array, cb) {
-    let years = []
-    years = cb(array).map((years) => years.Year)
-    return years
+    return cb(array).map(item => item.Year);
 }
-console.log(getYears(fifaData, getFinals))
+
+// function getYears(array, cb) {
+//     let years = []
+//     years = cb(array).map((years) => years.Year)
+//     return years
+// }
+// console.log(getYears(fifaData, getFinals))
 
 
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 4: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
@@ -67,17 +71,24 @@ Use the higher-order function getWinners to do the following:
 4. Returns the names of all winning countries in an array called `winners` */ 
 
 function getWinners(array, cb) {
-    let winners = []
-    let arr = cb(array);
-    for(let i = 0; i < arr.length; i++){
-        if (arr[i]['Home Team Goals'] > arr[i]['Away Team Goals']){
-            winners.push(arr[i]['Home Team Name'])
-        } else if (arr[i]['Away Team Goals'] > arr[i]['Home Team Goals']){
-            winners.push(arr[i]['Away Team Name']) 
-        }
-    }
-    return winners;
+    return cb(array).map(item => item['Home Team Goals'] > item['Away Team Goals'] ? 
+    item['Home Team Name'] : item['Away Team Name']);
+   
 }
+
+// my version - prof version is above.  ? meaning is return, : meaning is else.  because finals have no ties it is not an issue 
+// function getWinners(array, cb) {
+//     let winners = []
+//     let arr = cb(array);
+//     for(let i = 0; i < arr.length; i++){
+//         if (arr[i]['Home Team Goals'] > arr[i]['Away Team Goals']){
+//             winners.push(arr[i]['Home Team Name'])
+//         } else if (arr[i]['Away Team Goals'] > arr[i]['Home Team Goals']){
+//             winners.push(arr[i]['Away Team Name']) 
+//         }
+//     }
+//     return winners;
+// }
 
 console.log(getWinners(fifaData, getFinals))
 
@@ -92,15 +103,30 @@ Use the higher-order function getWinnersByYear to do the following:
 💡 HINT: the strings returned need to exactly match the string in step 4.
  */
 
+// prof version
+// function getWinnersByYear(data, getYearsCB, getWinnersCB) {
+//     const winners = getWinnersCB(data, getFinals);
+//     const years = getYearsCB(data, getFinals);
+//     return winners.map((item, index)=> `In ${years[index]}, ${item} won the world cup!`);
+// }
+
+// hybrid 
 function getWinnersByYear(array, cb1, cb2, cb3) {
-    let stringArray = [];
     let yearGet = cb2(array, cb1);
     let winGet = cb3(array, cb1);
-    for (let i = 0; i < yearGet.length; i++){
-        stringArray.push(`In ${yearGet[i]}, ${winGet[i]} won the world cup!`)
-    }
-    return stringArray;
+    return winGet.map((item, index)=> `In ${yearGet[index]}, ${item} won the world cup!`)
 }
+
+// my version is below, prof version is above 
+// function getWinnersByYear(array, cb1, cb2, cb3) {
+//     let stringArray = [];
+//     let yearGet = cb2(array, cb1);
+//     let winGet = cb3(array, cb1);
+//     for (let i = 0; i < yearGet.length; i++){
+//         stringArray.push(`In ${yearGet[i]}, ${winGet[i]} won the world cup!`)
+//     }
+//     return stringArray;
+// }
 
 console.log(getWinnersByYear(fifaData, getFinals, getYears, getWinners))
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 6: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
@@ -118,17 +144,25 @@ Use the higher order function `getAverageGoals` to do the following:
 */
 
 function getAverageGoals(data) {
-    let goalAv = 0
-    let arr = getFinals(data);
-    let homeGoals = arr.reduce((acc, arr) => {
-        return acc += arr['Home Team Goals'];
-      }, 0);
-    let awayGoals = arr.reduce((acc, arr) => {
-        return acc += arr['Away Team Goals'];
-      }, 0);
-    goalAv = ((homeGoals+awayGoals)/arr.length)
-    return goalAv.toFixed(2)
+   const averageHomeGoals = data.reduce(function(acc, item){
+    return acc + item['Home Team Goals'] + item['Away Team Goals']
+   }, 0)
+   return (averageHomeGoals / data.length).toFixed(2);
 }
+
+
+// function getAverageGoals(data) {
+//     let goalAv = 0
+//     let arr = getFinals(data);
+//     let homeGoals = arr.reduce((acc, arr) => {
+//         return acc += arr['Home Team Goals'];
+//       }, 0);
+//     let awayGoals = arr.reduce((acc, arr) => {
+//         return acc += arr['Away Team Goals'];
+//       }, 0);
+//     goalAv = ((homeGoals+awayGoals)/arr.length)
+//     return goalAv.toFixed(2)
+// }
 
 console.log(getAverageGoals(fifaData))
 
