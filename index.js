@@ -117,9 +117,9 @@ Use the higher order function `getAverageGoals` to do the following:
  
 */
 
-function getAverageGoals(cb) {
+function getAverageGoals(data) {
     let goalAv = 0
-    let arr = cb(fifaData)
+    let arr = getFinals(data);
     let homeGoals = arr.reduce((acc, arr) => {
         return acc += arr['Home Team Goals'];
       }, 0);
@@ -130,7 +130,7 @@ function getAverageGoals(cb) {
     return goalAv.toFixed(2)
 }
 
-console.log(getAverageGoals(getFinals))
+console.log(getAverageGoals(fifaData))
 
 /// 🥅 STRETCH 🥅 ///
 
